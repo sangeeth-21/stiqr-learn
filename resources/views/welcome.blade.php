@@ -37,7 +37,7 @@
 
             <div class="nav-actions">
                 <a href="{{ url('/login') }}" class="nav-link" style="margin-right: 10px;">Sign In</a>
-                <a href="#cta" class="btn btn-primary" id="header-cta-btn">Get Started</a>
+                <a href="{{ url('/signup') }}" class="btn btn-primary" id="header-cta-btn">Get Started</a>
                 <!-- Theme Toggle Button -->
                     <button class="theme-toggle-btn theme-toggle-header" id="theme-toggle-btn" aria-label="Toggle Dark/Light Mode">
                     <svg class="sun-icon theme-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">

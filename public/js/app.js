@@ -18,21 +18,21 @@ document.addEventListener('DOMContentLoaded', () => {
         handleScroll();
     }
 
-    // 1.5. Theme Toggle Logic
-    const themeToggleBtn = document.getElementById('theme-toggle-btn');
-    if (themeToggleBtn) {
-        themeToggleBtn.addEventListener('click', () => {
+    // 1.5. Theme Toggle Logic — binds to ALL theme toggle buttons on the page
+    const themeToggleBtns = document.querySelectorAll('#theme-toggle-btn');
+    themeToggleBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
             document.body.classList.add('theme-transition');
             document.body.classList.toggle('dark-mode');
             const theme = document.body.classList.contains('dark-mode') ? 'dark' : 'light';
             localStorage.setItem('theme', theme);
-            
+
             // Remove transition class after the transition finishes (300ms)
             setTimeout(() => {
                 document.body.classList.remove('theme-transition');
             }, 300);
         });
-    }
+    });
 
     // 2. Mobile Menu Toggle
     const mobileToggle = document.querySelector('.mobile-toggle');
@@ -121,4 +121,154 @@ document.addEventListener('DOMContentLoaded', () => {
         
         observer.observe(el);
     });
+
+    // =========================================================
+    // 5. ONBOARDING WIZARD
+    // =========================================================
+    const obForm = document.getElementById('onboarding-form');
+    const obSteps = document.querySelectorAll('.ob-step');
+    const obBtnNext = document.getElementById('ob-btn-next');
+    const obBtnBack = document.getElementById('ob-btn-back');
+    const obProgressFill = document.getElementById('ob-progress-fill');
+    let currentStep = 1;
+    const totalSteps = 5;
+
+    function updateOnboardingStep() {
+        obSteps.forEach(step => {
+            step.classList.remove('active');
+            if (parseInt(step.dataset.step) === currentStep) {
+                step.classList.add('active');
+            }
+        });
+
+        // Update progress bar
+        if (obProgressFill) {
+            const progress = (currentStep / totalSteps) * 100;
+            obProgressFill.style.width = progress + '%';
+        }
+
+        // Update back button visibility
+        if (obBtnBack) {
+            obBtnBack.style.visibility = currentStep === 1 ? 'hidden' : 'visible';
+        }
+
+        // Update next button text
+        if (obBtnNext) {
+            if (currentStep === totalSteps) {
+                obBtnNext.innerHTML = 'Finish <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0m-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/></svg>';
+            } else {
+                obBtnNext.innerHTML = 'Next <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8"/></svg>';
+            }
+        }
+    }
+
+    if (obBtnNext) {
+        obBtnNext.addEventListener('click', () => {
+            if (currentStep < totalSteps) {
+                currentStep++;
+                updateOnboardingStep();
+            } else {
+                // Submit form on last step
+                if (obForm) {
+                    obForm.submit();
+                }
+            }
+        });
+    }
+
+    if (obBtnBack) {
+        obBtnBack.addEventListener('click', () => {
+            if (currentStep > 1) {
+                currentStep--;
+                updateOnboardingStep();
+            }
+        });
+    }
+
+    // Onboarding Search Filters (Roles)
+    const roleSearch = document.getElementById('role-search');
+    const roleGrid = document.getElementById('role-grid');
+    if (roleSearch && roleGrid) {
+        roleSearch.addEventListener('input', (e) => {
+            const query = e.target.value.toLowerCase();
+            const cards = roleGrid.querySelectorAll('.ob-chip-card');
+            cards.forEach(card => {
+                const label = card.querySelector('.ob-chip-label').textContent.toLowerCase();
+                card.style.display = label.includes(query) ? '' : 'none';
+            });
+        });
+    }
+
+    // Onboarding Search Filters (Skills)
+    const skillSearch = document.getElementById('skill-search');
+    const skillGrid = document.getElementById('skill-grid');
+    if (skillSearch && skillGrid) {
+        skillSearch.addEventListener('input', (e) => {
+            const query = e.target.value.toLowerCase();
+            const chips = skillGrid.querySelectorAll('.ob-skill-chip');
+            chips.forEach(chip => {
+                const text = chip.querySelector('.ob-skill-text').textContent.toLowerCase();
+                chip.style.display = text.includes(query) ? '' : 'none';
+            });
+        });
+    }
+
+    // Job Title Selection (Step 4)
+    const jobTitleInput = document.getElementById('job-title-input');
+    const jobSuggestions = document.getElementById('job-suggestions');
+    if (jobTitleInput && jobSuggestions) {
+        const jobItems = jobSuggestions.querySelectorAll('.ob-job-item');
+
+        jobItems.forEach(item => {
+            item.addEventListener('click', () => {
+                // Remove selected from all items
+                jobItems.forEach(i => i.classList.remove('selected'));
+                // Select this one
+                item.classList.add('selected');
+                jobTitleInput.value = item.dataset.value;
+            });
+        });
+
+        // Filter job suggestions
+        jobTitleInput.addEventListener('input', (e) => {
+            const query = e.target.value.toLowerCase();
+            jobItems.forEach(item => {
+                const text = item.textContent.toLowerCase();
+                item.style.display = text.includes(query) ? '' : 'none';
+            });
+        });
+    }
+
+    // =========================================================
+    // 6. DASHBOARD SIDEBAR TOGGLE
+    // =========================================================
+    const dbSidebar = document.getElementById('db-sidebar');
+    const dbHamburger = document.getElementById('db-hamburger');
+    const dbOverlay = document.getElementById('db-overlay');
+    const dbSidebarClose = document.getElementById('db-sidebar-close');
+
+    function openSidebar() {
+        if (dbSidebar) dbSidebar.classList.add('open');
+        if (dbOverlay) dbOverlay.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeSidebar() {
+        if (dbSidebar) dbSidebar.classList.remove('open');
+        if (dbOverlay) dbOverlay.classList.remove('active');
+        document.body.style.overflow = '';
+    }
+
+    if (dbHamburger) {
+        dbHamburger.addEventListener('click', openSidebar);
+    }
+
+    if (dbOverlay) {
+        dbOverlay.addEventListener('click', closeSidebar);
+    }
+
+    if (dbSidebarClose) {
+        dbSidebarClose.addEventListener('click', closeSidebar);
+    }
 });
+

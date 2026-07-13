@@ -1,58 +1,105 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Stiqr Learn — Premium Education & Interactive Learning Platform
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Stiqr Learn is a premium, expert-led interactive learning platform designed to help digital professionals master high-demand skills in Technology, Design, and Business. Built with PHP Laravel, HTML5, Vanilla CSS, and modern Javascript.
 
-## About Laravel
+---
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## 🚀 Key Features
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+1. **Premium Landing Page**: 
+   - Clean, modern layout showcasing course filters, testimonials, key benefits, and partners.
+   - Interactive elements and smooth scroll transitions.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+2. **Secure Login & Account Creation**:
+   - Simulated Google and functional email-based signup/login interfaces.
+   - Credentials validation and user session management.
+   - Dark mode toggle and interactive password visibility switches.
 
-## Learning Laravel
+3. **5-Step Interactive Onboarding Wizard**:
+   - A Coursera-inspired setup wizard that triggers for first-time logged-in users.
+   - Collects personal learning goals, roles of interest (with search/filter), skills checklist, current job title, and highest education level.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+4. **Learner Dashboard**:
+   - **Sidebar Navigation**: Fast navigation between Dashboard, My Courses, Progress, Certificates, and Settings pages.
+   - **Overview stats**: View current course enrollments, learning hours, earned certificates, and active streak days.
+   - **Continue Learning**: Direct access to pick up where you left off on in-progress courses.
+   - **Personalized Recommendations**: Displays recommended courses based on selections made during the onboarding flow.
+   - **Weekly Activity Chart**: Visual bar chart representing learning hours per day.
+   - **Account Settings**: Interactive form to edit profile details, change avatar, and toggle notifications.
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+5. **Integrated Light / Dark Mode**:
+   - Universal theme switching that persists choices locally (`localStorage`) to prevent style flashes on reload.
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
+---
 
-## Agentic Development
+## 🔐 Demo Credentials
 
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+To log in and experience the full flow:
+- **Email Address**: `admin@stiqrlearn.com`
+- **Password**: `password123`
 
-```bash
-composer require laravel/boost --dev
+---
 
-php artisan boost:install
+## 🛠️ Installation & Local Setup
+
+### Prerequisites
+- PHP >= 8.2
+- Composer
+- Node.js & npm (for assets compilation if needed)
+
+### Setup Instructions
+
+1. **Clone the Repository**:
+   ```bash
+   git clone <repository-url>
+   cd stiqr-learn
+   ```
+
+2. **Install Dependencies**:
+   ```bash
+   composer install
+   npm install
+   ```
+
+3. **Environment Setup**:
+   - Copy `.env.example` to `.env`
+   - Generate application key:
+     ```bash
+     php artisan key:generate
+     ```
+
+4. **Run the Server**:
+   ```bash
+   php artisan serve
+   ```
+   Open `http://127.0.0.1:8000` in your web browser.
+
+---
+
+## 📂 Key Directory Structure
+
+```text
+├── app/
+│   └── Http/Controllers/
+│       └── AuthController.php    # Session, login, onboarding, and dashboard logic
+├── public/
+│   ├── css/app.css               # Main compiled & custom design system stylesheet
+│   └── js/app.js                 # App-wide interactive logic (Onboarding, sidebar, themes)
+├── resources/
+│   ├── css/app.css               # Resources entry stylesheet for Vite pipeline
+│   ├── js/app.js                 # Resources entry script for Vite pipeline
+│   └── views/
+│       ├── layouts/
+│       │   └── dashboard.blade.php  # Sidebar layout wrapper
+│       ├── welcome.blade.php     # Public landing page
+│       ├── login.blade.php       # Login view
+│       ├── signup.blade.php      # Signup view
+│       ├── onboarding.blade.php  # 5-step onboarding wizard
+│       ├── dashboard.blade.php   # User portal home
+│       ├── courses.blade.php     # My Enrolled Courses view
+│       ├── progress.blade.php    # Weekly learning progress view
+│       ├── settings.blade.php    # User preferences & profile settings
+│       └── certificates.blade.php # Earned credentials certificates view
+└── routes/
+    └── web.php                   # Frontend and auth routes
 ```
-
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
-
-## Contributing
-
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).

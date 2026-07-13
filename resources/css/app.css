@@ -4982,9 +4982,6 @@ body.dark-mode .db-enroll-btn:hover {
  * DARK MODE - All Sub Pages
  * ========================================================= */
 
-/* My Courses Dark Mode */
-body.dark-mode .mc-title,
-
 /* Dashboard Responsive */
 @media (max-width: 1024px) {
     .db-sidebar {
@@ -5302,16 +5299,7 @@ body.dark-mode .mc-title,
 
 /* =========================================================
  * MY COURSES PAGE (mc-*)
- * ========================================================= */
-.mc-header {
-    display: flex;
-    justify-content: space-between;
-
-/* ============================================================= */
-/* My Courses Styles                                             */
-/* ============================================================= */
-
-/* Stiqr Learn - My Courses Styles */
+ * =========================================================*/
 
 .mc-header {
     display: flex;

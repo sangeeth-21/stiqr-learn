@@ -270,5 +270,132 @@ document.addEventListener('DOMContentLoaded', () => {
     if (dbSidebarClose) {
         dbSidebarClose.addEventListener('click', closeSidebar);
     }
+
+    // =========================================================
+    // 7. SETTINGS PAGE THEME SWITCHER
+    // =========================================================
+    const themeLightBtn = document.getElementById('theme-light-btn');
+    const themeDarkBtn = document.getElementById('theme-dark-btn');
+
+    if (themeLightBtn && themeDarkBtn) {
+        const updateSettingsThemeButtons = () => {
+            const currentTheme = localStorage.getItem('theme') || 'light';
+            if (currentTheme === 'dark') {
+                themeDarkBtn.classList.add('active');
+                themeLightBtn.classList.remove('active');
+            } else {
+                themeLightBtn.classList.add('active');
+                themeDarkBtn.classList.remove('active');
+            }
+        };
+
+        updateSettingsThemeButtons();
+
+        themeLightBtn.addEventListener('click', () => {
+            document.body.classList.add('theme-transition');
+            document.body.classList.remove('dark-mode');
+            localStorage.setItem('theme', 'light');
+            updateSettingsThemeButtons();
+            
+            // Sync with sidebar theme toggle if it exists
+            setTimeout(() => document.body.classList.remove('theme-transition'), 300);
+        });
+
+        themeDarkBtn.addEventListener('click', () => {
+            document.body.classList.add('theme-transition');
+            document.body.classList.add('dark-mode');
+            localStorage.setItem('theme', 'dark');
+            updateSettingsThemeButtons();
+            
+            setTimeout(() => document.body.classList.remove('theme-transition'), 300);
+        });
+    }
+
+    // =========================================================
+    // 8. MY COURSES PAGE FILTERING & BOOKMARKS
+    // =========================================================
+    const mcFilterTabs = document.querySelectorAll('.mc-filter-tab');
+    const mcCourseItems = document.querySelectorAll('.mc-course-item');
+    const mcBookmarkBtns = document.querySelectorAll('.mc-bookmark-btn');
+
+    const updateFilterCounts = () => {
+        let total = mcCourseItems.length;
+        let inProgress = 0;
+        let completed = 0;
+        let bookmarked = 0;
+
+        mcCourseItems.forEach(item => {
+            const status = item.dataset.status;
+            const hasActiveBookmark = item.querySelector('.mc-bookmark-btn.active');
+
+            if (status === 'in-progress') inProgress++;
+            if (status === 'completed') completed++;
+            if (status === 'bookmarked' || hasActiveBookmark) bookmarked++;
+        });
+
+        const countTotal = document.querySelector('.mc-filter-tab[data-filter="all"] .mc-count');
+        const countInProgress = document.querySelector('.mc-filter-tab[data-filter="in-progress"] .mc-count');
+        const countCompleted = document.querySelector('.mc-filter-tab[data-filter="completed"] .mc-count');
+        const countBookmarked = document.querySelector('.mc-filter-tab[data-filter="bookmarked"] .mc-count');
+
+        if (countTotal) countTotal.textContent = total;
+        if (countInProgress) countInProgress.textContent = inProgress;
+        if (countCompleted) countCompleted.textContent = completed;
+        if (countBookmarked) countBookmarked.textContent = bookmarked;
+    };
+
+    if (mcFilterTabs.length && mcCourseItems.length) {
+        mcFilterTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                mcFilterTabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+
+                const filter = tab.dataset.filter;
+
+                mcCourseItems.forEach(item => {
+                    const status = item.dataset.status;
+                    const isBookmarked = item.querySelector('.mc-bookmark-btn.active') !== null;
+
+                    let show = false;
+                    if (filter === 'all') {
+                        show = true;
+                    } else if (filter === 'in-progress' && status === 'in-progress') {
+                        show = true;
+                    } else if (filter === 'completed' && status === 'completed') {
+                        show = true;
+                    } else if (filter === 'bookmarked' && (status === 'bookmarked' || isBookmarked)) {
+                        show = true;
+                    }
+
+                    if (show) {
+                        item.style.display = 'flex';
+                    } else {
+                        item.style.display = 'none';
+                    }
+                });
+            });
+        });
+
+        // Initialize counts
+        updateFilterCounts();
+    }
+
+    if (mcBookmarkBtns.length) {
+        mcBookmarkBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                btn.classList.toggle('active');
+                updateFilterCounts();
+
+                // If currently on the bookmarked filter tab, hide the card if bookmarked is toggled off
+                const activeTab = document.querySelector('.mc-filter-tab.active');
+                if (activeTab && activeTab.dataset.filter === 'bookmarked' && !btn.classList.contains('active')) {
+                    const card = btn.closest('.mc-course-item');
+                    if (card && card.dataset.status !== 'bookmarked') {
+                        card.style.display = 'none';
+                    }
+                }
+            });
+        });
+    }
 });
 
